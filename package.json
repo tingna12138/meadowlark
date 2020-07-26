@@ -1,0 +1,34 @@
+{
+  "name": "meadowlark",
+  "version": "1.0.0",
+  "description": "",
+  "main": "meadowlark.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "tina",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "connect-rest": "^3.0.33",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-handlebars": "^4.0.5",
+    "express-session": "^1.17.1",
+    "express3-handlebars": "^0.5.2",
+    "formidable": "^1.2.2",
+    "mongoose": "^5.9.25",
+    "nodemailer": "^6.4.10"
+  },
+  "devDependencies": {
+    "grunt": "^1.2.1",
+    "grunt-cafe-mocha": "^0.1.13",
+    "grunt-contrib-jshint": "^2.1.0",
+    "grunt-exec": "^3.0.0",
+    "mocha": "^8.0.1",
+    "zombie": "^6.1.4"
+  }
+}
