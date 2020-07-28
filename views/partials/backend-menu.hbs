@@ -1,35 +1,26 @@
-<ul>
-  <li class="home">后台菜单项</li>
-  <li class="tour">景点配置才当项</li>
-</ul>
+<aside class="Hui-aside">
+	<div class="menu_dropdown bk_2">
+		{{#each sideMenu}}
+		  {{["name"]}} 
+		  <dl id="{{code}}">
+		  	<dt class="{{selected}}"><i class="Hui-iconfont">&#xe616;</i> {{name}}<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		  	<dd style="{{isBlock}}">
+		  		<ul>
+		  			{{#each children}}
+						  <li class="{{isCurrent}}">
+		  			  	<a href="{{code}}" title="{{name}}">{{name}}</a>
+		  			  </li>
+						{{/each}}
+		  		</ul>
+		  	</dd>
+		  </dl>
+		{{/each}}
+	</div>
+</aside>
+<div class="dislpayArrow hidden-xs">
+	<a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a>
+</div>
 
 <script>
-  var index = 1
   
-  // 以下方式直接是重新请求页面
-  //  $(".home").click(eve => {
-  //   index ++
-  //   location.replace('http://localhost:5000/admin/home')
-  // })
-  // $(".tour").click(eve => {
-  //   index ++
-  //   location.replace('http://localhost:5000/admin/tour')
-  // })
-
-  // $(".home").click(eve => {
-  //   index ++
-  //   console.log(123)
-  //   $.ajax({
-  //     url: '/admin/home'
-  //   })
-  // })
-  // $(".tour").click(eve => {
-  //   index ++
-  //   console.log(123)
-  //   $.ajax({
-  //     url: '/admin/tour',
-  //     success () {
-  //     }
-  //   })
-  // })
 </script>
