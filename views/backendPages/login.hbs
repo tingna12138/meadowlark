@@ -97,7 +97,11 @@ $(function($) {
       method: 'POST',
       data: loginForm,
       success (res) {
-        console.log(res)
+        if (res.code === 200) {
+					// 弹框提示登陆成功
+					// 跳转页面
+					location.replace('http://localhost:5000/admin/site-hot')
+				}
       }
     })
   })

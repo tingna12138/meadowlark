@@ -11,5 +11,10 @@ module.exports = {
       }
     })
     return menu
+  },
+
+  // 转换数据库返回数据的格式
+  toScript (data) {
+    return JSON.parse(JSON.stringify(data))
   }
 }
