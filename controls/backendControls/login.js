@@ -16,8 +16,7 @@ module.exports = {
     }
 
     if (queryRes.payload.length === 0) {
-      // 登录操作成功但是美哟对应用户应该响应什么状态码
-      // res.code = queryRes.code
+      res.code = 400
       res.message = '用户名不存在'
       return res
     }
@@ -31,7 +30,7 @@ module.exports = {
 
     if (!hasUser) {
       // 登录操作成功但是美哟对应用户应该响应什么状态码
-      // res.code = queryRes.code
+      res.code = 400
       res.message = '密码错误'
       return res
     }
@@ -44,5 +43,13 @@ module.exports = {
     req.session.userId = userInfo._id
     req.session.grade = userInfo.grade
     return res
+  },
+
+  // 退出登录
+  loginOut: async function (req, content) {
+     req.session.isLogin = false
+     req.session.userId = ''
+     req.session.grade = undefined
+     return {code: 200, message: '退出成功'}
   }
 }

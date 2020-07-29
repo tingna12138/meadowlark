@@ -1,6 +1,7 @@
 var mongoose = require('./index')
 var operMongoDB = {}
 var dataList = new Map()
+// var { } = require('../utils/util')
 
   // 集合名称（必填）， 查询条件对象，定义集合结构的对象)
   operMongoDB.find = async function (name, qoptions, options) {
@@ -9,7 +10,6 @@ var dataList = new Map()
     var q_options = qoptions || {}
     
     // 排除这个集合已经定义model了
-    console.log(1111, name, dataList)
     if (!dataList.has(name)) {
       var Schema = mongoose.Schema(sche_options)
       dataList.set(name, mongoose.model(`${name}s`, Schema, name))

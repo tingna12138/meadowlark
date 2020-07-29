@@ -10,9 +10,12 @@
   <link rel="stylesheet" type="text/css" href="/h-ui/lib/Hui-iconfont/1.0.8/iconfont.css" />
   <link rel="stylesheet" type="text/css" href="/h-ui/static/h-ui.admin/skin/default/skin.css" id="skin" />
   <link rel="stylesheet" type="text/css" href="/h-ui/static/h-ui.admin/css/style.css" />
+  <link rel="stylesheet" type="text/css" href="/assets/css/backend-css.css" />
 </head>
 <body>
+	<div class="progress"><div class="progress-bar"><span class="sr-only" style="width:0;background:#98d444"></span></div></div>
   <header class="navbar-wrapper">
+	<div class="Huialert hide-tip" ><i class="Hui-iconfont">&#xe6a6;</i></div>
 	<div class="navbar navbar-fixed-top">
 		<div class="container-fluid cl">
 			<span class="logo navbar-slogan f-l mr-10 hidden-xs" style="font-size: 16px">贴心小导游后台管理系统</span>
@@ -20,7 +23,7 @@
 		
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
-					<li>超级管理员</li>
+					<li>{{ adminInfo.name }}</li>
 					<li class="dropDown dropDown_hover">
 						<a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
@@ -29,15 +32,15 @@
 								<a href="#">切换账户</a>
 							</li>
 							<li>
-								<a href="#">退出</a>
+								<a href="#" class="back-user">退出</a>
 							</li>
 						</ul>
 					</li>
-					<li id="Hui-msg">
+					{{!-- <li id="Hui-msg">
 						<a href="#" title="消息">
 						<span class="badge badge-danger">1</span>
 						<i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a>
-					</li>
+					</li> --}}
 					<li id="Hui-skin" class="dropDown right dropDown_hover">
 						<a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
@@ -70,6 +73,22 @@
 <section class="Hui-article-box">
   {{{body}}}
 </section>
+<script src="/assets/js/util.js"></script>
+<script>
+  
+	// 退出登录
+	$('.back-user').on('click', eve => {
+		http(
+			'/backend/logout',
+		  'POST',
+			res => {
+		  setTimeout(() => {
+        location.replace('http://localhost:5000/admin')
+      },800)
+		})
+	})
+
+</script>
 
 </body>
 </html>

@@ -59,10 +59,8 @@ app.listen(app.get('port'), () => {
 })
 
 app.use((req, res, next) => {
-  console.log(1234567890, req.path, req.session.isLogin)
   // 后台管理系统登陆验证
   if (/^\/admin(\/login)?$/.test(req.path) && req.session.isLogin) {
-    console.log('lalalal')
     res.redirect('/admin/site-hot')
   } else if (/^\/admin.+/.test(req.path) && !req.session.isLogin) {
     res.redirect('/admin')
@@ -77,12 +75,14 @@ processRoutes(rest)
 // 定制404页面
 app.use((req, res) => {
   res.status(404)
+  if (/^\/api.*/.test(req.path)) {
+    res.send('找不到对应的资源')
+  }
   res.render('404', { layout: false })
 })
 
 // 定制500页面
 app.use((err, req, res, next) => {
-  console.log(err)
   res.status(500)
   res.render('500', { layout: false })
 })
