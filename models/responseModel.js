@@ -6,8 +6,19 @@ var dataList = new Map()
   // 集合名称（必填）， 查询条件对象，定义集合结构的对象)
   operMongoDB.find = async function (name, qoptions, options) {
     var result = {}
+    var pageNum, pageSize
     var sche_options = options || {}
     var q_options = qoptions || {}
+
+    if (q_options.pageNum) {
+      pageNum = q_options.pageNum
+      delete q_options.pageNum
+    }
+
+    if (q_options.pageSize) {
+      pageSize = q_options.pageSize
+      delete q_options.pageSize
+    }
     
     // 排除这个集合已经定义model了
     if (!dataList.has(name)) {
@@ -15,16 +26,56 @@ var dataList = new Map()
       dataList.set(name, mongoose.model(`${name}s`, Schema, name))
     }
 
-    await dataList.get(name).find(q_options, (err, data) => {
-      if (err) {
-        result.code = 500
-        result.message = err
-        return
-      }
-      result.code = 200
-      result.message = '操作成功'
-      result.payload = data
+    // await dataList.get(name).find(q_options, (err, data) => {
+    //   if (err) {
+    //     result.code = 500
+    //     result.message = err
+    //     return
+    //   }
+    //   result.code = 200
+    //   result.message = '操作成功'
+    //   result.payload = data
+    // })
+    // await dataList.get(name)
+    // .find(q_options)
+    // .skip(pageSize ? (Number(pageSize) + 1)*(pageNum - 1): 0)
+    // .limit(pageSize ? Number(pageSize) + 1 : '')
+    // .exec((err, data) => {
+    //   console.log
+    //   if (err) {
+    //     result.code = 500
+    //     result.message = err
+    //     return
+    //   }
+    //   result.code = 200
+    //   result.message = '操作成功'
+    //   result.payload = data
+    // })
+    await new Promise ((resolve, rejection) => {
+      dataList.get(name)
+      .find(q_options)
+      .skip(pageSize ? (Number(pageSize) + 1)*(pageNum - 1): 0)
+      .limit(pageSize ? Number(pageSize) + 1 : '')
+      .exec((err, data) => {
+        console.log(1234)
+        if (err) {
+          result.code = 500
+          result.message = err
+        } else {
+          result.code = 200
+          result.message = '操作成功'
+          result.payload = data
+        }
+        console.log(12345)
+        resolve(result)
+      })
+    }).then(res => {
+      console.log()
+    }).catch(err => {
+      result.code = 500
+      result.message = '出错了'
     })
+    console.log(123456)
     return result
   }
 

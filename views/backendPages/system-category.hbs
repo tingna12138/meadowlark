@@ -1,6 +1,66 @@
-栏目管理
+<ul id="Huifold1" class="Huifold">
+  <li class="item">
+    <h4>一级菜单
+      <span class="button" style="right: 126px;width: 110px;" onclick="addChildMenu(index)">新增二级菜单</span>
+      <span class="button" style="right: 68px;width: 48px;" onclick="editMenu(index)">编辑</span>
+      <span class="button" style="right: 10px;width: 48px;" onclick="delMenu(0, index)"> 删除</span>
+    </h4>
+    <div class="info">
+      <ul id="Huifold1" class="Huifold">
+        <li class="item" style="border-bottom: 1px solid #ddd">
+          二级菜单
+          <span class="button" style="right: 68px;width: 48px;top:-8px">编辑</span>
+          <span class="button" style="right: 10px;width: 48px;top:-8px"> 删除</span>
+        </li>
+      </ul>
+    </div>
+  </li>
+
+</ul>
 
 {{> backend-script}}
 <script type="text/javascript">
+jQuery.Huifold = function(obj,obj_c,speed,obj_type,Event){
+	if(obj_type == 2){
+		$(obj+":first").find("b").html("-");
+		$(obj_c+":first").show()}
+	$(obj).bind(Event,function(){
+		if($(this).next().is(":visible")){
+			if(obj_type == 2){
+				return false}
+			else{
+				$(this).next().slideUp(speed).end().removeClass("selected");
+				$(this).find("b").html("+")}
+		}
+		else{
+			if(obj_type == 3){
+				$(this).next().slideDown(speed).end().addClass("selected");
+				$(this).find("b").html("-")}else{
+				$(obj_c).slideUp(speed);
+				$(obj).removeClass("selected");
+				$(obj).find("b").html("+");
+				$(this).next().slideDown(speed).end().addClass("selected");
+				$(this).find("b").html("-")}
+		}
+	})}
 
+$(function(){
+	$.Huifold("#Huifold1 .item h4","#Huifold1 .item .info","fast",1,"click"); /*5个参数顺序不可打乱，分别是：相应区,隐藏显示的内容,速度,类型,事件*/
+})
+
+// 新增二级菜单
+function addChildMenu (id) {
+  // id是当前一级菜单的唯一标识
+}
+
+// 删除菜单
+function delMenu (type, index) {
+  // type: 0 表示一级菜单，1表示二级菜单； index: 菜单项的唯一标识
+  // 提示是否确认删除
+}
+
+// 编辑菜单项：比如名称
+function editMenu (index) {
+  
+}
 </script>

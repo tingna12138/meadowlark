@@ -20,11 +20,46 @@
 <body>
   <div id="box"></div>
 
+  <!--1.  复选框 -->
+  <input type="checkbox" value="" id="check-box">
+  <input type="button" value="点 我" onclick="showVal()">
   <script>
     var box = document.getElementById('box')
     setTimeout(() => {
       box.classList.add('add')
     }, 1000)
+
+    function arguLength (a,b,c) {
+      console.log(arguments, arguments.length, arguments[0], a,b,c)
+    }
+
+    function showVal () {
+      var checBox = document.getElementById('check-box')
+      checBox.checked = true
+      console.log(123, checBox.checked)
+    }
+    
+    // 2. async异步函数
+    async function asyncFn () {
+      var result = ''
+      // 没有await asyncFn的返回的result为空字符串
+      await new Promise((res, rej) => {
+        console.log(123)
+        setTimeout(() => {
+          res(456)
+          console.log(1234567) // res()执行后，它后面的表达式也会执行
+        }, 1000)
+      }).then(resw => {
+        console.log(1234, resw)
+        result = resw
+      })
+      return result
+    }
+
+    // async函数返回的是一个promise对象，返回值result作为返回then回调方法的参数 
+    asyncFn().then(res => {
+      console.log('异步函数的执行结果', res)
+    })
   </script>
 </body>
 </html>

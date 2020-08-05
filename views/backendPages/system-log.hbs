@@ -1,0 +1,135 @@
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		系统管理
+		<span class="c-gray en">&gt;</span>
+		系统日志
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div class="text-c"> 日期范围：
+				<form action="" name="searchform">
+					<input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}'})" id="logmin" class="input-text Wdate" name="startTime" style="width:120px;">
+		  		-
+		  		<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d'})" id="logmax" name="endTime" class="input-text Wdate" style="width:120px;">
+		  		<input type="text" name="operuser" id="" placeholder="管理员名称" style="width:250px" class="input-text">
+		  		<input type="text" name="operdes" id="" placeholder="操作内容" style="width:250px" class="input-text">
+					<button name="" id="" class="btn btn-success search-log" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜日志</button>
+				</form>
+			</div>
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l">
+				<a href="javascript:;" onclick="logdel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+				</span>
+				<span class="r">共有数据：<strong>54</strong> 条</span>
+			</div>
+			<div class="mt-10">
+				<table class="table table-border table-bordered table-bg table-hover table-sort">
+					<thead>
+						<tr class="text-c el-log-head">
+							<th width="25"><input type="checkbox" onchange="checkAll()" name="chooseall" value=""></th>
+							<th width="100">类型</th>
+							<th>内容</th>
+							<th width="17%">用户名</th>
+							<th width="120">客户端IP</th>
+							<th width="120">时间</th>
+							<th width="70">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c el-log-list">
+							<td><input type="checkbox" onchange="changeLogSelected(index)" value="" name=""></td>
+							<td>1</td>
+							<td>登录成功!</td>
+							<td>admin</td>
+							<td>61.233.7.80</td>
+							<td>2014-6-11 11:11:42</td>
+							<td><a title="详情" href="javascript:;" onclick="system_log_show(this,'10001')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe665;</i></a>
+								<a title="删除" href="javascript:;" onclick="system_log_del(this,'10001')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						</tr>
+						<tr class="text-c el-log-list">
+							<td><input type="checkbox" onchange="changeLogSelected(index)" value="" name=""></td>
+							<td>1</td>
+							<td>登录成功!</td>
+							<td>admin</td>
+							<td>61.233.7.80</td>
+							<td>2014-6-11 11:11:42</td>
+							<td><a title="详情" href="javascript:;" onclick="system_log_show(this,'10001')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe665;</i></a>
+								<a title="删除" href="javascript:;" onclick="system_log_del(this,'10001')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id="pageNav" class="pageNav"></div>
+		</article>
+	</div>
+
+{{> backend-script}}
+
+<script type="text/javascript">
+  var checkedList = []  // 复选框选中的项
+	var logList = [] // 日志列表
+
+  $('.search-log').on('click', eve => {
+    eve.preventDefault()
+    var searchForm = {
+      startTime: document.searchform.startTime.value || '',
+      endTime: document.searchform.endTime.value || '',
+      operuser: document.searchform.operuser.value || '',
+      operdes: document.searchform.operdes.value || ''
+    }
+		http(
+			'/backend/system/log/searchLog',
+		  'POST',
+      searchForm,
+			res => {
+				if (res.code === 200) {
+          // res.payload
+					// 渲染页面
+				}
+		})
+	})
+  
+	// 删除log日志
+	function logdel () {
+		var ids = []
+		$('.el-log-list input[type="checkbox"]').each((index, ele) => {
+			if (checkedList.indexOf(index) > 0) ids.push(logList[index].id)
+		})
+    http(
+			'/backend/system/log/delLog',
+		  'POST',
+      {ids},
+			res => {
+				if (res.code === 200) {
+          // res.payload
+					// 渲染页面
+				}
+		})
+	}
+
+	// 当复选框的值发生改变的时候触发
+	function changeLogSelected (index) {
+		if (checkedList.indexOf(index) < 0) {
+			checkedList.push(index)
+			return
+		}
+		checkedList.splice(index, 1)
+	}
+
+	// 点击全选复选框的时候
+	function checkAll () {
+		checkedList.length = 0
+    if (logList.length === checkedList.length) {
+			$('.el-log-list').each((index, ele) => {
+			  ele.checked = false
+	   	})
+			return
+		}
+
+		$('.el-log-list').each((index, ele) => {
+		  ele.checked = true
+			checkedList.push(index)
+	  })
+	}
+</script>
