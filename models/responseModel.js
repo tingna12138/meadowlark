@@ -26,31 +26,6 @@ var dataList = new Map()
       dataList.set(name, mongoose.model(`${name}s`, Schema, name))
     }
 
-    // await dataList.get(name).find(q_options, (err, data) => {
-    //   if (err) {
-    //     result.code = 500
-    //     result.message = err
-    //     return
-    //   }
-    //   result.code = 200
-    //   result.message = '操作成功'
-    //   result.payload = data
-    // })
-    // await dataList.get(name)
-    // .find(q_options)
-    // .skip(pageSize ? (Number(pageSize) + 1)*(pageNum - 1): 0)
-    // .limit(pageSize ? Number(pageSize) + 1 : '')
-    // .exec((err, data) => {
-    //   console.log
-    //   if (err) {
-    //     result.code = 500
-    //     result.message = err
-    //     return
-    //   }
-    //   result.code = 200
-    //   result.message = '操作成功'
-    //   result.payload = data
-    // })
     await new Promise ((resolve, rejection) => {
       dataList.get(name)
       .find(q_options)

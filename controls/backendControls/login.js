@@ -5,7 +5,6 @@ module.exports = {
   fetchAdmin: async (req, content) => {
     var res = {}
     var userInfo = {}
-    // var queryRes = await operMongoDB.find('admin-list', {name: req.body.username})
     await operMongoDB.find('admin-list', {name: req.body.username}).then(queryRes => {
       queryRes = toScript(queryRes)
 

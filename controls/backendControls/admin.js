@@ -9,6 +9,7 @@ module.exports = {
     await operMongoDB.find('admin-list', { ...req.param }).then(serRes => {
       res = toScript(serRes)
     })
+    return res
   },
   
   // 新增管理员
@@ -32,8 +33,11 @@ module.exports = {
 
   // 获取管理权限
   async getGrade (req, content) {
-    var serRes = operMongoDB.find('admin-grades')
-    return toScript(serRes)
+    var res = 
+    await operMongoDB.find('admin-grades').then(serRes => {
+      res = toScript(serRes)
+    })
+    return res
   },
 
   // 编辑管理权限

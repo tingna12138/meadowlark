@@ -56,10 +56,23 @@
       return result
     }
 
-    // async函数返回的是一个promise对象，返回值result作为返回then回调方法的参数 
+    // 获取async返回值的形式一： async函数返回的是一个promise对象，返回值result作为返回then回调方法的参数 
     asyncFn().then(res => {
       console.log('异步函数的执行结果', res)
     })
+    // 获取async返回值的形式二: 获取过程必须放在一个异步函数里，否则返回的值是<pending>状态
+    async function getAsyncReturn () {
+      var data = await asyncFn()
+      var pro = await new Promise(res => {
+        setTimeout(() => { res('放在异步函数里面的Promise')}, 1000)
+      })
+      console.log('通过赋值的形式获取asyncFn的返回值', data)
+      console.log(pro)
+    }
+    getAsyncReturn()
+    // 总结：
+       // 1.async方法返回的是一个promise对象，返回值是then()回调函数的参数；
+       // 2. promise对象在进入完成状态后，如果没有显式的调用.then()方法,则会返回reslve()方法的参数
   </script>
 </body>
 </html>
