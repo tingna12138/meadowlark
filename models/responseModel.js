@@ -1,13 +1,13 @@
 var mongoose = require('./index')
+var schemaObj = require('./schemaList')
 var operMongoDB = {}
 var dataList = new Map()
 // var { } = require('../utils/util')
 
-  // 集合名称（必填）， 查询条件对象，定义集合结构的对象)
-  operMongoDB.find = async function (name, qoptions, options) {
+  // 集合名称（必填）， 查询条件对象
+  operMongoDB.find = async function (name, qoptions) {
     var result = {}
     var pageNum, pageSize
-    var sche_options = options || {}
     var q_options = qoptions || {}
 
     if (q_options.pageNum) {
@@ -22,7 +22,7 @@ var dataList = new Map()
     
     // 排除这个集合已经定义model了
     if (!dataList.has(name)) {
-      var Schema = mongoose.Schema(sche_options)
+      var Schema = mongoose.Schema(schemaObj[name])
       dataList.set(name, mongoose.model(`${name}s`, Schema, name))
     }
 
@@ -32,7 +32,6 @@ var dataList = new Map()
       .skip(pageSize ? (Number(pageSize) + 1)*(pageNum - 1): 0)
       .limit(pageSize ? Number(pageSize) + 1 : '')
       .exec((err, data) => {
-        console.log(1234)
         if (err) {
           result.code = 500
           result.message = err
@@ -41,29 +40,25 @@ var dataList = new Map()
           result.message = '操作成功'
           result.payload = data
         }
-        console.log(12345)
         resolve(result)
       })
     }).then(res => {
-      console.log()
     }).catch(err => {
       result.code = 500
       result.message = '出错了'
     })
-    console.log(123456)
     return result
   }
 
-  // 修改数据库。参数分别是：集合名称（必填）， 查询条件对象， 想要更改的选中字段的结果, 定义集合结构的对象
-  operMongoDB.update = async function (name, qoptions, resoptions, options) {
+  // 修改数据库。参数分别是：集合名称（必填）， 查询条件对象， 想要更改的选中字段的结果
+  operMongoDB.update = async function (name, qoptions, resoptions) {
     var result = {}
-    var sche_options = options || {}
     var q_options = qoptions || {}
     var res_options = resoptions || {}
     
     // 排除这个集合已经定义model了
     if (!dataList.has(name)) {
-      var Schema = mongoose.Schema(sche_options)
+      var Schema = mongoose.Schema(name)
       dataList.set(name, mongoose.model('', Schema, name))
     }
 
@@ -80,15 +75,14 @@ var dataList = new Map()
     return result
   }
 
-  // 向数据库中增加数据。 参数分别是： 集合名称，想要增加的文档对象，集合映射
-  operMongoDB.addData = async function (name, docoptions, options) {
+  // 向数据库中增加数据。 参数分别是： 集合名称，想要增加的文档对象
+  operMongoDB.addData = async function (name, docoptions) {
     var result = {}
-    var sche_options = options || {}
     var doc_options = docoptions || {}
     
     // 排除这个集合已经定义model了
     if (!dataList.has(name)) {
-      var Schema = mongoose.Schema(sche_options)
+      var Schema = mongoose.Schema(name)
       dataList.set(name, mongoose.model('', Schema, name))
     }
 
@@ -107,14 +101,14 @@ var dataList = new Map()
   }
 
   // 删除数据库中的数据
-  operMongoDB.remove = async function (name, revoptions, options) {
+  operMongoDB.remove = async function (name, revoptions) {
     var result = {}
     var sche_options = options || {}
     var rev_options = revoptions || {}
 
     // 排除这个集合已经定义model了
     if (!dataList.has(name)) {
-      var Schema = mongoose.Schema(sche_options)
+      var Schema = mongoose.Schema(name)
       dataList.set(name, mongoose.model('', Schema, name))
     }
     await dataList.get(name).remove(rev_options, err => {

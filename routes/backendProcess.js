@@ -24,5 +24,6 @@ module.exports = function (rest) {
   rest.get('/backend/site/siteHot/byMonth', siteControl.getSiteRecordByMon)  // 网站管理-按月获取网站热度
   rest.get('/backend/site/siteHot/byDay', siteControl.getSiteRecordByDay)  // 网站管理-按日获取网站热度
 
-  rest.get('/backend/scene/sceneList', sceneControl.getSiteRecordByDay)  // 景点管理-获取景点列表
+  rest.get('/backend/scene/sceneList/getScene', sceneControl.getScene)  // 景点管理-获取景点列表
+  rest.get('/backend/scene/sceneList/addScene', sceneControl.addScene)  // 景点管理-获取景点列表
 }

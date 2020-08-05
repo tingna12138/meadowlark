@@ -70,15 +70,8 @@ module.exports = {
   async addCategory (req, content) {
     // 前端传入：菜单名（name）、代码（code）、id(用于判断添加一级还是二级菜单)
     // 后端写： selected（""）, isBlock(""), children([])
-    var schemaObj = {
-      name: String,
-      code: String,
-      selected: '',
-      isBlock: '',
-      children: []
-    }
     if (content.id === undefined) {
-      var addRes = operMongoDB.addData('admin-menu', { ...content }, schemaObj)
+      var addRes = operMongoDB.addData('admin-menu', { ...content })
       return addRes
     }
 
