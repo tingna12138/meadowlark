@@ -14,6 +14,9 @@
 <link href="/h-ui/static/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />
 <link href="/h-ui/static/h-ui.admin/css/style.css" rel="stylesheet" type="text/css" />
 <link href="/h-ui/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="/assets/css/backend-css.css" rel="stylesheet" type="text/css" />
+<link href="/assets/css/bs-css.css" rel="stylesheet" type="text/css" />
+
 <!--[if IE 6]>
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*')</script><![endif]-->
@@ -51,9 +54,18 @@
 			</div>
 			<div class="row cl">
 				<div class="formControls col-xs-8 col-xs-offset-3">
-					<input class="input-text size-L" name="checkdata" value="" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value=''}" value="验证码:" style="width:150px">
-					<img src="images/VerifyCode.aspx.png">
-					<a id="kanbuq" href="javascript:">看不清，换一张</a>
+					<div>
+            <table border="0" cellspacing="5" cellpadding="5" >
+                <tr>
+                    <td> <div id="checkCode" class="code"  onclick="createCode(4)" ></div></td>
+                    <td> <span onclick="createCode(4)">看不清换一张</span></td>
+                </tr>
+                <tr>
+                    <td style="font-size: 16px;padding: 6px 0;">请输入验证码：</td>
+                    <td><input class="bs-input" type="text" id="inputCode"  style="float:left;" /></td>
+                </tr>
+            </table>
+          </div>
 				</div>
 			</div>
 			<div class="row cl">
@@ -78,8 +90,52 @@
 
 <script type="text/javascript" src="/h-ui/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="/h-ui/static/h-ui/js/H-ui.js"></script>
+<!--验证码-->
+<script type="text/javascript" src="/assets/js/verify-code.js"></script>
+<script type="text/javascript" src="/assets/js/util.js"></script>
 <script>
-// var _hmt = _hmt || []
+
+ //检查验证码是否正确
+ function validateCode() {
+  //获取显示区生成的验证码
+  var checkCode = document.getElementById("checkCode").innerHTML;
+  //获取输入的验证码
+  var inputCode = document.getElementById("inputCode").value;
+  //console.log(checkCode);
+  //console.log(inputCode);
+  if (inputCode.length <= 0)
+  {
+      alert("请输入验证码！");
+  }
+  else if (inputCode.toUpperCase() != checkCode.toUpperCase())
+  {
+      alert("验证码输入有误！");
+      createCode(4);
+  }
+  else
+  {
+    // 登录
+		submitOper()
+  }       
+}
+
+// 登录请求
+function submitOper () {
+	var loginForm = {
+    username: document.loginform.username.value,
+    password: document.loginform.password.value
+  }
+	http(
+		'/backend/login',
+		'POST',
+		loginForm,
+		res => {
+			// 弹框提示登陆成功
+			// 跳转页面
+			location.replace('http://localhost:5000/admin/site-hot')
+		}
+	)
+}
 
 $(function($) {
   $('.login-button').on('click', eve => {
@@ -88,22 +144,7 @@ $(function($) {
     // 获取表单数据: 除了用submit事件（第八章），只能一个一个的获取
     // 验证用户名和密码格式；验证验证码是否正确
     // 登录密码加密
-    var loginForm = {
-      username: document.loginform.username.value,
-      password: document.loginform.password.value
-    }
-    $.ajax({
-      url: 'api/backend/login',
-      method: 'POST',
-      data: loginForm,
-      success (res) {
-        if (res.code === 200) {
-					// 弹框提示登陆成功
-					// 跳转页面
-					location.replace('http://localhost:5000/admin/site-hot')
-				}
-      }
-    })
+    validateCode()
   })
 })
 </script>

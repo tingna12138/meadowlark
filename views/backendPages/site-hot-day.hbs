@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="container" style="min-width:700px;height:400px"></div>
+
+  {{> backend-script}}
+  <script type="text/javascript" src="/h-ui/lib/hcharts/Highcharts/5.0.6/js/highcharts.js"></script>
+  <script type="text/javascript" src="/h-ui/lib/hcharts/Highcharts/5.0.6/js/modules/exporting.js"></script>
+<script type="text/javascript">
+  function renderChart (series) {
+    $('#container').highcharts({
+        title: {
+            text: 'Monthly Average Temperature',
+            x: -20 //center
+        },
+        subtitle: {
+          text: 'Source: WorldClimate.com',
+          x: -20
+        },
+        xAxis: {
+          categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+          ],
+          title: {
+            text: '日期',
+            align: 'high'
+          },
+        },
+        yAxis: {
+            title: {
+                text: '数量',
+                align: 'high'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+          headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+          pointFormat: '<tr><td style="color:{series.color}padding:0">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+          footerFormat: '</table>',
+          shared: true,
+          useHTML: true
+        },
+        // legend: {
+        //     layout: 'vertical',
+        //     align: 'right',
+        //     verticalAlign: 'middle',
+        //     borderWidth: 0
+        // },
+        series
+    })
+  }
+  var queryObj = getUrlQuery(location.search)
+  // var queryStr = location.search.slice(1)
+  // queryStr.split('&').forEach(ele => {
+  //   var itemArr = ele.split('=')
+  //   queryObj[itemArr[0]] = itemArr[1]
+  // })
+  http(
+		`/backend/site/siteHot/byDay?year=${queryObj['year']}&month=${queryObj['month']}`,
+		'GET',
+		res => {
+      const { code, payload = [] } = res
+			if (code === 200) {
+        var series = [
+          { name: '浏览量', data: [] },
+          { name: '分享量', data: [] },
+          { name: '注册量', data: [] }
+        ]
+        payload.forEach(ele => {
+          series[0].data.push(Number(ele.view))
+          series[1].data.push(Number(ele.share))
+          series[2].data.push(Number(ele.register))
+        })
+        renderChart(series)
+      }
+		})
+    
+</script>
+</body>
+</html>

@@ -12,9 +12,17 @@ module.exports = function (app) {
 
     res.render('backendPages/login', {layout: false})
   })
+  
+  // 按日获取网站访问量的页面
+  app.get('/admin/site-hot/byDay', (req, res) => {
+    res.render('backendPages/site-hot-day', {layout: false})
+  })
 
-  // 网站热度
+  // 后台管理页面
+  // '/admin/:id' 匹配不了 /admin/site-hot/bymonth
   app.get('/admin/:id', async (req, res) => {
+    // console.log('传到后台管理页面的session', req.session.grade)
+    var grade = req.session.grade
     // 获取菜单栏
     var route_id = req.params.id
     // var sideMenu = await operMongoDB.find('admin-menu').payload  undefined
@@ -26,6 +34,6 @@ module.exports = function (app) {
     // 获取用户信息
     var the_adminInfo = await operMongoDB.find('admin-list', {_id: req.session.userId})
     var adminInfo = toScript(the_adminInfo.payload)[0]
-    res.render(`backendPages/${route_id}`, {route: route_id, sideMenu, adminInfo})
+    res.render(`backendPages/${route_id}`, {route: route_id, sideMenu, adminInfo, name: 'hahahah', grade})
   })
 }

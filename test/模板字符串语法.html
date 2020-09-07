@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div class="box"></div>
+  <script type="text/javascript" src="../public/h-ui/lib/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+    var data = [1,2,3]
+
+    // 方式一： 不可行
+    // var htmlStr = `<div>
+    //   <% for(let i = 0; i< data.length; i ++) { %>
+    //     <li><%= data.[i] %></li>
+    //    <% } %>
+    // </div>`
+
+    var htmlStr = `<div>
+      ${data.forEach(ele => {
+        return `<p>${ele}</p>`
+      })}
+    </div>`
+
+
+// 方式三
+//     var tmpl = addrs => `
+//     <table>
+//     ${addrs.map(addr => `
+//         <tr><td>${addr.first}</td></tr>
+//         <tr><td>${addr.last}</td></tr>
+//     `).join('')}
+//     </table>
+// `;
+ 
+// console.log(tmpl([{first:'a', last: 'b'}]))
+ 
+// output:
+/*"
+    <table>
+        <tr><td>a</td></tr>
+        <tr><td>b</td></tr>
+    </table>
+"*/
+
+    $('.box').append(htmlStr)
+  </script>
+</body>
+</html>

@@ -41,12 +41,19 @@ var handlebars = exphbs.create({
   extname: '.hbs',
   helpers: {
     section: function(name, options){
-        if(!this._sections) this._sections = {};
-        this._sections[name] = options.fn(this);
-        return null;
+      if(!this._sections) this._sections = {};
+      this._sections[name] = options.fn(this);
+      return null;
+    }
+  },
+  registerHelper: {
+    'checkreg': (index, option) => {
+      console.log('自定义过滤器中的参数', index, option)
+      return true
     }
   }
 })
+
 app.engine('.hbs', handlebars.engine)
 app.set('view engine', '.hbs')
 
@@ -59,10 +66,11 @@ app.listen(app.get('port'), () => {
 })
 
 app.use((req, res, next) => {
+  console.log(req.path)
   // 后台管理系统登陆验证
   if (/^\/admin(\/login)?$/.test(req.path) && req.session.isLogin) {
     res.redirect('/admin/site-hot')
-  } else if (/^\/admin.+/.test(req.path) && !req.session.isLogin) {
+  } else if (/^\/admin\/.+/.test(req.path) && !req.session.isLogin) {
     res.redirect('/admin')
   } else {
     next()
@@ -72,6 +80,9 @@ app.use((req, res, next) => {
 pageRoutes(app)
 processRoutes(rest)
 
+app.get('/test', (req, res) => {
+  res.send('我是一个测试页面')
+})
 // 定制404页面
 app.use((req, res) => {
   res.status(404)

@@ -11,6 +11,12 @@ module.exports = {
     collect: 0,
     share: 0
   },
+
+  // 景点分类
+  'scene-sort': {
+    code: 0,
+    name: String
+  },
   
   // 管理员等级
   'admin-grades': {
@@ -50,5 +56,11 @@ module.exports = {
     operUser: String,
     operTime: String,
     operIp: String
+  },
+
+  // 邮件定制列表
+  'email-list': {
+    email: String,
+    date: String
   }
 }

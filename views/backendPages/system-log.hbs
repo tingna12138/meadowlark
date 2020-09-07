@@ -63,10 +63,14 @@
 			<div id="pageNav" class="pageNav"></div>
 		</article>
 	</div>
-
+ 
 {{> backend-script}}
 
+{{!-- 直接访问的路径必须放在public文件夹下面才能通过路径直接查找，否则要显示的配置路由 --}}
+<script src="/test.js" type="text/javascript"></script>
+
 <script type="text/javascript">
+  // console.log(test)
   var checkedList = []  // 复选框选中的项
 	var logList = [] // 日志列表
 

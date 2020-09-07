@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>web-handlebar</title>
+</head>
+<body>
+  <h2>这种方式在node端用不了</h2>
+  <script type="text/javascript" src="../public/h-ui/lib/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="http://cdn.bootcss.com/handlebars.js/4.0.6/handlebars.js"></script>
+
+  <script type="text/html" id="test">
+    <div>
+        <div>{{title}}</div>
+        {{{include 'hbs-child' children}}}
+    </div>
+  </script>
+  <!-- 子模板 -->
+  <script type="text/html" id="hbs-child">
+      <ul>
+          {{#each this}}
+          <li>{{name}}：{{desc}}</li>
+          {{#if children}}
+              {{{include 'hbs-child' children}}}
+          {{/if}}
+          {{/each}}
+      </ul>
+  
+  </script>
+
+  <script>
+    Handlebars.registerHelper("include", function(id, data) {
+    var html = $('#'+id).html();
+    return Handlebars.compile(html)(data);
+});
+
+  var data = {
+    title: '喵星人',
+    children: [
+      {
+        name: '宠物猫',
+        desc: '卖萌'
+      },{
+        name: '家猫',
+        desc: '抓老鼠',
+        children: [
+          {name: '白猫', desc: '可爱'},
+          {name: '黑猫', desc: '警长？'}
+        ]
+      }
+    ]
+  }
+  var html = Handlebars.compile($('#test').html())(data);
+  $('body').append(html);
+  </script>
+
+</body>
+</html>

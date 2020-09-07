@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript" src="../public/h-ui/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdn.bootcss.com/handlebars.js/4.0.6/handlebars.js"></script>
+
+    <script type="text/html" id="test">
+      <table>
+        <tr>
+          {{#each this}}
+            {{#include 123}}
+              <td>{{this}}</td>
+            {{/include}}
+          {{/each}}
+        </tr>
+      </table>
+    </script>
+
+    <script>
+
+      Handlebars.registerHelper("include", function(id, data) {
+          console.log(id,data)
+          return true
+      })
+
+      var arr = [
+        '123',
+        '456',
+        '789'
+      ]
+      var html = Handlebars.compile($('#test').html())(arr);
+      $('body').append(html);
+    </script>
+</body>
+</html>

@@ -6,13 +6,11 @@ module.exports = {
     var res = {}
     var userInfo = {}
     await operMongoDB.find('admin-list', {name: req.body.username}).then(queryRes => {
-      queryRes = toScript(queryRes)
 
       // 数据库连接失败
       if (queryRes.code === 500) {
         res.code = queryRes.code
         res.message = '数据库连接失败'
-        return
       }
   
       if (queryRes.payload.length === 0) {
@@ -49,14 +47,24 @@ module.exports = {
       res.message = '服务器出错了'
     })
     
-    return res
+    return {result:res, options: { statusCode: res.code }}
+    // return res
   },
 
   // 退出登录
   loginOut: async function (req, content) {
-     req.session.isLogin = false
-     req.session.userId = ''
-     req.session.grade = undefined
-     return {code: 200, message: '退出成功'}
+    var res = {
+      code: 200,
+      message: '退出成功'
+    }
+    try {
+      req.session.isLogin = false
+      req.session.userId = ''
+      req.session.grade = undefined
+    } catch (err) {
+      res.code = 500
+      res.message = err
+    }
+     return {result:res, options: { statusCode: res.code }}
   }
 }

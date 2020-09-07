@@ -1,63 +1,191 @@
-<ul id="Huifold1" class="Huifold">
-  <li class="item">
-    <h4>一级菜单
-      <span class="button" style="right: 126px;width: 110px;" onclick="addChildMenu(index)">新增二级菜单</span>
-      <span class="button" style="right: 68px;width: 48px;" onclick="editMenu(index)">编辑</span>
-      <span class="button" style="right: 10px;width: 48px;" onclick="delMenu(0, index)"> 删除</span>
-    </h4>
-    <div class="info">
-      <ul id="Huifold1" class="Huifold">
-        <li class="item" style="border-bottom: 1px solid #ddd">
-          二级菜单
-          <span class="button" style="right: 68px;width: 48px;top:-8px">编辑</span>
-          <span class="button" style="right: 10px;width: 48px;top:-8px"> 删除</span>
-        </li>
-      </ul>
-    </div>
-  </li>
-
+<ul id="Huifold1" class="Huifold" style="padding-left: 20px">
+  <span class="el-add-first-menu"  onclick="product_add('添加一级菜单','menu-add.html')">新增一级菜单</span>
 </ul>
 
-{{> backend-script}}
-<script type="text/javascript">
-jQuery.Huifold = function(obj,obj_c,speed,obj_type,Event){
-	if(obj_type == 2){
-		$(obj+":first").find("b").html("-");
-		$(obj_c+":first").show()}
-	$(obj).bind(Event,function(){
-		if($(this).next().is(":visible")){
-			if(obj_type == 2){
-				return false}
-			else{
-				$(this).next().slideUp(speed).end().removeClass("selected");
-				$(this).find("b").html("+")}
-		}
-		else{
-			if(obj_type == 3){
-				$(this).next().slideDown(speed).end().addClass("selected");
-				$(this).find("b").html("-")}else{
-				$(obj_c).slideUp(speed);
-				$(obj).removeClass("selected");
-				$(obj).find("b").html("+");
-				$(this).next().slideDown(speed).end().addClass("selected");
-				$(this).find("b").html("-")}
-		}
-	})}
 
-$(function(){
-	$.Huifold("#Huifold1 .item h4","#Huifold1 .item .info","fast",1,"click"); /*5个参数顺序不可打乱，分别是：相应区,隐藏显示的内容,速度,类型,事件*/
+{{> backend-script}}
+
+<script type="text/javascript">
+var menuList = []  // 菜单列表
+var DialogIndex
+
+// 添加菜单弹窗
+function product_add(title,url){
+	DialogIndex = layer.open({
+		type: 2,
+		title: title,
+		content: url,
+		success:function (layero,index) {
+			var iframe = window['layui-layer-iframe' + index];
+      iframe.child('add')
+		}
+	})
+	layer.full(DialogIndex)
+}
+
+
+// 编辑菜单弹窗
+function product_edit(title,url){
+	DialogIndex = layer.open({
+		type: 2,
+		title: title,
+		content: url,
+		success:function (layero,index) {
+			var iframe = window['layui-layer-iframe' + index];
+      iframe.child('edit')
+		}
+	})
+	layer.full(DialogIndex)
+}
+
+// 接收子组件传递会的值 
+function GetValue(isSuccess){
+  if (isSuccess) {
+		layer.close(DialogIndex)
+		location.reload()
+	}
+}
+
+
+function htmlTemplate (menuItem, index) {
+	var htmlStr = `<li indexAttr="data-${index}" class="el-${menuItem.code} item">
+     <h4 indexAttr="data-${index}" >${menuItem.name}
+       <span class="button" style="right: 126px;width: 110px;background:#67c23a" onclick="product_add('添加二级菜单','menu-add.html?id=${menuItem._id}')">新增二级菜单</span>
+       <span class="button" style="right: 68px;width: 48px;" onclick="product_edit('编辑一级菜单','menu-add.html?id=${menuItem._id}', 123)">编辑</span>
+       <span class="button" style="right: 10px;width: 48px;background:#f0c78a"> 删除</span>
+     </h4>\n`
+	var htmlStrend = `</li>`
+	 if (!menuItem.children || menuItem.children.length === 0) {
+		htmlStr += htmlStrend
+		return htmlStr
+	}
+	 htmlStr += `<div class="info second-system-menu">
+       <ul id="Huifold1" class="Huifold">\n`
+	
+	menuItem.children.forEach((secondMenu, index) => {
+		htmlStr += `<li class="item" indexAttr="data-${index}" style="border-bottom: 1px solid #ddd">
+       ${secondMenu.name}
+       <span class="button" style="right: 68px;width: 48px;top:4px;cursor:pointer" onclick="product_edit('编辑二级菜单','menu-add.html?id=${menuItem._id}&index=${index}')">编辑</span>
+       <span class="button" style="right: 10px;width: 48px;top:4px;background:#f0c78a;cursor:pointer"> 删除</span>
+     </li>\n`
+	})
+	htmlStr += `</ul></div></li>\n`
+
+	return htmlStr
+}
+
+// 请求菜单数据
+function fetchData () {
+	http(
+    `/backend/system/category/getcate`,
+    'GET',
+    res => {
+  		const { code, payload } = res
+  		if (code === 200) {
+  			menuList = payload || []
+  			var menuStr = ``
+  
+  			menuList.forEach((menu, index) => {
+          menuStr += htmlTemplate(menu, index)
+  			})
+        // console.log(menuStr)
+  			$('#Huifold1').append(menuStr)
+  		}
+    })
+}
+
+fetchData()
+
+$('#Huifold1').on('click', eve=> {
+	// 动态展示/隐藏二级菜单
+	// console.dir(eve.target.innerText)
+	if (eve.target.nodeName === 'H4') {
+		var theIndex = $(eve.target).attr('indexAttr').charAt(5)
+
+		if ($(eve.target).siblings('.info').css('display') === 'none') {
+			$(eve.target).siblings('.info').css('display', 'block')
+			$(eve.target).siblings('.info').css('display')
+
+		  setTimeout(() => {
+		    $(eve.target).siblings('.info').height(menuList[theIndex].children.length * 36)
+				$(eve.target).siblings('.info').css("opacity","1")
+			}, 50)
+		} else {
+			$(eve.target).siblings('.info').css("opacity",".1")
+			$(eve.target).siblings('.info').height(0)
+			setTimeout(() => {
+				$(eve.target).siblings('.info').css('display', 'none')
+			}, 500)
+		}
+	}
+
+	// 删除菜单
+	if (eve.target.innerText === '删除') {
+		var delIndex
+		var _id
+
+		if ($(eve.target).parents('li').length === 1) {
+			//操作一级菜单
+			var theIndex = $(eve.target).parents('li').attr('indexAttr').charAt(5)
+			_id = menuList[theIndex]._id
+			
+		}
+
+		if ($(eve.target).parents('li').length === 2) {
+			//操作二级菜单
+      var firIndex = $($(eve.target).parents('li')[1]).attr('indexAttr').charAt(5)
+			var secIndex = $($(eve.target).parents('li')[0]).attr('indexAttr').charAt(5)
+			_id = menuList[firIndex]._id
+			delIndex = secIndex
+		}
+		console.log(_id, secIndex)
+		
+		http(
+      `/backend/system/category/delcate`,
+      'POST',
+			{ _id, delIndex},
+      res => {
+      	const { code, payload } = res
+      	if (code === 200) {
+      		location.reload()
+      	}
+      })
+	}
 })
 
-// 新增二级菜单
+// 新增菜单
 function addChildMenu (id) {
+	var addForm = {
+		_id: id || null,
+	}
+
+	// 新增一级
   // id是当前一级菜单的唯一标识
+	http(
+  `/backend/system/category/getcate`,
+  'GET',
+  res => {
+		const { code, payload } = res
+		if (code === 200) {
+			menuList = payload || []
+			var menuStr = ``
+
+			menuList.forEach((menu, index) => {
+        menuStr += htmlTemplate(menu, index)
+			})
+      // console.log(menuStr)
+			$('#Huifold1').append(menuStr)
+		}
+  })
 }
 
 // 删除菜单
-function delMenu (type, index) {
-  // type: 0 表示一级菜单，1表示二级菜单； index: 菜单项的唯一标识
-  // 提示是否确认删除
-}
+// function delMenu (id, index) {
+// 	console.log(12345)
+//   // id:表示一级菜单的_id; index: 如果有就是二级菜单的索引
+// 	// console.log(id, index)
+//   // 提示是否确认删除
+// }
 
 // 编辑菜单项：比如名称
 function editMenu (index) {
